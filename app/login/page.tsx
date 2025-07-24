@@ -1,5 +1,6 @@
 'use client';
 
+import './login.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/SupabaseClient';
@@ -39,17 +40,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '400px', margin: 'auto' }}>
+    <div className="login-container">
       <h2>Login</h2>
 
-      <form onSubmit={handleLogin}>
+      <form className="login-form" onSubmit={handleLogin}>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          style={{ display: 'block', margin: '1rem 0', width: '100%' }}
         />
 
         <input
@@ -58,21 +58,16 @@ export default function LoginPage() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          style={{ display: 'block', margin: '1rem 0', width: '100%' }}
         />
 
-        <button type="submit" style={{ width: '100%', marginBottom: '1rem' }}>
-          Login
+        <button type="submit">Login</button>
+        <button type="button" className="google-btn" onClick={handleGoogleLogin}>
+          Sign in with Google
         </button>
       </form>
 
-      <button onClick={handleGoogleLogin} style={{ width: '100%' }}>
-        Sign in with Google
-      </button>
-
-      {errorMsg && (
-        <p style={{ color: 'red', marginTop: '1rem' }}>{errorMsg}</p>
-      )}
+      {errorMsg && <p className="login-error">{errorMsg}</p>}
     </div>
   );
 }
+import './login.css'; 
