@@ -84,7 +84,7 @@ const DashboardComponent = () => {
                 <p className="text-gray-400 text-sm uppercase tracking-wide">
                   Total Balance
                 </p>
-                <p className="text-2xl font-bold text-white mt-1">$12,450</p>
+                <p className="text-2xl font-bold text-white mt-1"></p>
               </div>
               <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center group-hover:bg-red-500/30 transition-colors">
                 <svg
@@ -136,7 +136,7 @@ const DashboardComponent = () => {
                 <p className="text-gray-400 text-sm uppercase tracking-wide">
                   Last Activity
                 </p>
-                <p className="text-2xl font-bold text-white mt-1">2m ago</p>
+                <p className="text-2xl font-bold text-white mt-1"></p>
               </div>
               <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center group-hover:bg-red-500/30 transition-colors">
                 <svg

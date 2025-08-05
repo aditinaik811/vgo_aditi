@@ -10,6 +10,9 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
+  FiShoppingBag,
+  FiMessageCircle,
+  FiUsers,
 } from "react-icons/fi";
 
 type SidebarLayoutProps = {
@@ -28,6 +31,9 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   const navItems = [
     { label: "Account Details", icon: <FiUser />, path: "/dashboard/account" },
     { label: "My Wallet", icon: <FiCreditCard />, path: "/dashboard/wallet" },
+    { label: "Purchase History", icon: <FiShoppingBag />, path: "/dashboard/purchase-history" },
+    { label: "Feedback", icon: <FiMessageCircle />, path: "/dashboard/feedback" },
+    { label: "Referral", icon: <FiUsers />, path: "/dashboard/referral" },
     { label: "FAQs", icon: <FiHelpCircle />, path: "/dashboard/faqs" },
     {
       label: "Refund Policy",
@@ -85,7 +91,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-col gap-2 flex-1">
+          <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
             {navItems.map((item, index) => (
               <button
                 key={item.label}
@@ -123,7 +129,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
               </div>
               <div>
                 <p className="text-white font-medium">Username</p>
-                <p className="text-gray-400 text-sm">Premium User</p>
+                <p className="text-gray-400 text-sm"></p>
               </div>
             </div>
           </div>
