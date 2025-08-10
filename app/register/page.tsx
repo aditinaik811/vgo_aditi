@@ -1,326 +1,234 @@
-// 'use client'
-
-// import './register.css'
-// import { useState } from 'react'
-// import { useRouter } from 'next/navigation'
-// import { supabase } from '@/lib/SupabaseClient'
-
-// export default function RegisterPage() {
-//   const router = useRouter()
-
-//   const [form, setForm] = useState({
-//     fullName: '',
-//     email: '',
-//     password: '',
-//     confirmPassword: '',
-//     age: '',
-//     gender: '',
-//     category: '',
-//     city: ''
-//   })
-
-//   const [error, setError] = useState('')
-//   const [loading, setLoading] = useState(false)
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-//     const { name, value } = e.target
-//     setForm(prev => ({ ...prev, [name]: value }))
-//   }
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault()
-//     setError('')
-//     setLoading(true)
-
-//     if (form.password !== form.confirmPassword) {
-//       setError('Passwords do not match')
-//       setLoading(false)
-//       return
-//     }
-
-//     const { data, error: signUpError } = await supabase.auth.signUp({
-//       email: form.email,
-//       password: form.password
-//     })
-
-//     if (signUpError) {
-//       setError(signUpError.message)
-//       setLoading(false)
-//       return
-//     }
-
-//     const user = data.user
-//     if (user) {
-//       const { error: profileError } = await supabase
-//         .from('profiles')
-//         .insert({
-//           id: user.id,
-//           email: form.email,
-//           full_name: form.fullName,
-//           age: parseInt(form.age),
-//           gender: form.gender,
-//           category: form.category,
-//           city: form.city
-//         })
-
-//       if (profileError) {
-//         setError(profileError.message)
-//         setLoading(false)
-//         return
-//       }
-//     }
-
-//     router.push('/dashboard')
-//     setLoading(false)
-//   }
-
-//   const handleGoogleSignIn = async () => {
-//     await supabase.auth.signInWithOAuth({
-//       provider: 'google',
-//       options: {
-//         redirectTo: `${location.origin}/auth/callback` // handles post-login logic
-//       }
-//     })
-//   }
-
-//   return (
-//     <div className="register-container">
-//       <h2>Register</h2>
-//       <form onSubmit={handleSubmit} className="register-form">
-//         <input type="text" name="fullName" placeholder="Full Name" value={form.fullName} onChange={handleChange} required />
-//         <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-//         <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-//         <input type="password" name="confirmPassword" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
-
-//         <select name="age" value={form.age} onChange={handleChange} required>
-//           <option value="">Select Age</option>
-//           {Array.from({ length: 91 }, (_, i) => (
-//             <option key={i + 10} value={i + 10}>{i + 10}</option>
-//           ))}
-//         </select>
-
-//         <div className="gender-group">
-//           <label><input type="radio" name="gender" value="Male" onChange={handleChange} required /> Male</label>
-//           <label><input type="radio" name="gender" value="Female" onChange={handleChange} required /> Female</label>
-//           <label><input type="radio" name="gender" value="Other" onChange={handleChange} required /> Other</label>
-//         </div>
-
-//         <select name="category" value={form.category} onChange={handleChange} required>
-//           <option value="">Select Category</option>
-//           <option value="Student">Student</option>
-//           <option value="Employee">Employee</option>
-//           <option value="Employer">Employer</option>
-//         </select>
-
-//         <input type="text" name="city" placeholder="City" value={form.city} onChange={handleChange} required />
-
-//         {error && <p className="error">{error}</p>}
-
-//         <button type="submit" disabled={loading}>
-//           {loading ? 'Registering...' : 'Register'}
-//         </button>
-
-//         <p>or</p>
-
-//         <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
-//           Sign in with Google
-//         </button>
-//       </form>
-//     </div>
-//   )
-// }
-
-
-
-
-'use client'
-
-import './register.css'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/SupabaseClient'
+'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/SupabaseClient';
+import Link from 'next/link';
 
 export default function RegisterPage() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  const [formData, setFormData] = useState({
+    full_name: '',
+    phone: '',
     age: '',
     gender: '',
     category: '',
     city: '',
-    phone: '',
-    otp: ''
-  })
+  });
 
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [otpSent, setOtpSent] = useState(false)
-  const [otpVerified, setOtpVerified] = useState(false)
+  const [error, setError] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [otpSuccess, setOtpSuccess] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
-  }
+  const isFormComplete =
+    formData.full_name &&
+    formData.phone &&
+    formData.age &&
+    formData.gender &&
+    formData.category &&
+    formData.city &&
+    otpVerified;
 
   const handleSendOTP = async () => {
-    setError('')
-    if (!form.phone.startsWith('+')) {
-      setError('Phone number must include country code (e.g., +91XXXXXXXXXX)')
-      return
+    setError('');
+    setOtpSuccess('');
+    setOtpVerified(false);
+
+    if (!formData.phone) {
+      setError('Please enter your phone number first.');
+      return;
     }
 
-    const { error } = await supabase.auth.signInWithOtp({ phone: form.phone })
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('phone', formData.phone)
+      .single();
 
-    if (error) {
-      setError('Failed to send OTP: ' + error.message)
+    if (existingProfile) {
+      setError('Phone number already registered. Please log in.');
+      return;
+    }
+
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      phone: formData.phone,
+    });
+
+    if (otpError) {
+      setError(otpError.message);
     } else {
-      setOtpSent(true)
-      alert('OTP sent to ' + form.phone)
+      setOtpSent(true);
+      setOtpSuccess('OTP sent successfully to your phone.');
     }
-  }
+  };
 
   const handleVerifyOTP = async () => {
-    setError('')
-    const { data, error } = await supabase.auth.verifyOtp({
-      phone: form.phone,
-      token: form.otp,
-      type: 'sms'
-    })
+    setError('');
+    setOtpSuccess('');
 
-    if (error) {
-      setError('OTP verification failed: ' + error.message)
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      phone: formData.phone,
+      token: otp,
+      type: 'sms',
+    });
+
+    if (verifyError) {
+      setError('Invalid OTP. Please try again.');
+      setOtpVerified(false);
     } else {
-      setOtpVerified(true)
-      alert('Phone number verified successfully!')
+      setOtpVerified(true);
+      setOtpSuccess('OTP verified successfully!');
     }
-  }
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    if (!otpVerified) {
-      setError('Please verify your phone number via OTP before submitting.')
-      setLoading(false)
-      return
-    }
+    const {
+      data: { user },
+      error: sessionError,
+    } = await supabase.auth.getUser();
 
-    if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
-    }
-
-    // Sign up with email/password
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password
-    })
-
-    if (signUpError) {
-      setError(signUpError.message)
-      setLoading(false)
-      return
+    if (!user || sessionError) {
+      setError('User session invalid. Please verify OTP again.');
+      setLoading(false);
+      return;
     }
 
-    const user = data.user
-    if (user) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: user.id,
-          email: form.email,
-          full_name: form.fullName,
-          age: parseInt(form.age),
-          gender: form.gender,
-          category: form.category,
-          city: form.city,
-          phone: form.phone
-        })
+    const { error: insertError } = await supabase.from('profiles').insert([
+      {
+        id: user.id,
+        full_name: formData.full_name,
+        phone: formData.phone,
+        age: formData.age,
+        gender: formData.gender,
+        category: formData.category,
+        city: formData.city,
+      },
+    ]);
 
-      if (profileError) {
-        setError(profileError.message)
-        setLoading(false)
-        return
-      }
+    if (insertError) {
+      setError('Error saving profile info.');
+    } else {
+      router.push('/dashboard');
     }
 
-    setLoading(false)
-    router.push('/dashboard')
-  }
-
-  const handleGoogleSignIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback`
-      }
-    })
-  }
+    setLoading(false);
+  };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit} className="register-form">
-        <input type="text" name="fullName" placeholder="Full Name" value={form.fullName} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} required />
+    <div>
+      <form onSubmit={handleRegister} className="space-y-2">
+        <input
+          type="text"
+          placeholder="Full Name"
+          onChange={(e) =>
+            setFormData({ ...formData, full_name: e.target.value })
+          }
+          required
+        />
 
-        <select name="age" value={form.age} onChange={handleChange} required>
-          <option value="">Select Age</option>
-          {Array.from({ length: 91 }, (_, i) => (
-            <option key={i + 10} value={i + 10}>{i + 10}</option>
-          ))}
-        </select>
+        <input
+          type="text"
+          placeholder="Phone (+91...)"
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          required
+        />
 
-        <div className="gender-group">
-          <label><input type="radio" name="gender" value="Male" onChange={handleChange} required /> Male</label>
-          <label><input type="radio" name="gender" value="Female" onChange={handleChange} required /> Female</label>
-          <label><input type="radio" name="gender" value="Other" onChange={handleChange} required /> Other</label>
-        </div>
-
-        <select name="category" value={form.category} onChange={handleChange} required>
-          <option value="">Select Category</option>
-          <option value="Student">Student</option>
-          <option value="Employee">Employee</option>
-          <option value="Employer">Employer</option>
-        </select>
-
-        <input type="text" name="city" placeholder="City" value={form.city} onChange={handleChange} required />
-
-        <input type="tel" name="phone" placeholder="Phone Number (e.g. +919999999999)" value={form.phone} onChange={handleChange} required />
-
-        <button type="button" onClick={handleSendOTP} disabled={otpSent}>
-          {otpSent ? 'OTP Sent' : 'Send OTP'}
+        <button
+          type="button"
+          onClick={handleSendOTP}
+          disabled={!formData.phone}
+        >
+          Send OTP to phone
         </button>
 
         {otpSent && (
           <>
-            <input type="text" name="otp" placeholder="Enter OTP" value={form.otp} onChange={handleChange} required />
-            <button type="button" onClick={handleVerifyOTP} disabled={otpVerified}>
-              {otpVerified ? 'Verified' : 'Verify OTP'}
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={handleVerifyOTP}
+              disabled={!otp}
+            >
+              Verify OTP
             </button>
           </>
         )}
 
-        {error && <p className="error">{error}</p>}
+        <select
+          onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+          required
+        >
+          <option value="">Select Age</option>
+          {Array.from({ length: 48 }, (_, i) => i + 13).map((age) => (
+            <option key={age} value={age}>
+              {age}
+            </option>
+          ))}
+        </select>
 
-        <button type="submit" disabled={loading || !otpVerified}>
+        <select
+          onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+          required
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <select
+          onChange={(e) =>
+            setFormData({ ...formData, category: e.target.value })
+          }
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="Student">Student</option>
+          <option value="Employee">Employee</option>
+          <option value="Employer">Employer</option>
+          <option value="Racer">Racer</option>
+          <option value="Mechanic">Mechanic</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="City"
+          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+          required
+        />
+
+        <button type="submit" disabled={!isFormComplete || loading}>
           {loading ? 'Registering...' : 'Register'}
         </button>
 
-        <p>or</p>
-
-        <button type="button" className="google-btn" onClick={handleGoogleSignIn}>
-          Sign in with Google
-        </button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {otpSuccess && <p style={{ color: 'green' }}>{otpSuccess}</p>}
       </form>
+
+      <p style={{ marginTop: 20 }}>
+        Already have an account?{' '}
+        <Link
+          href="/login"
+          style={{ color: 'blue', textDecoration: 'underline' }}
+        >
+          Login
+        </Link>
+      </p>
     </div>
-  )
+  );
 }
+
