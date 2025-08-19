@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/SupabaseClient';
+import './login.css';
 
 export default function PhoneLoginPage() {
   const router = useRouter();

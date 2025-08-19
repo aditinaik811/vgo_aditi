@@ -5,7 +5,6 @@ import { ReactNode, useState } from "react";
 import {
   FiUser,
   FiCreditCard,
-  FiHelpCircle,
   FiRefreshCw,
   FiLogOut,
   FiMenu,
@@ -29,17 +28,11 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   };
 
   const navItems = [
-    { label: "Account Details", icon: <FiUser />, path: "/dashboard/account" },
+
     { label: "My Wallet", icon: <FiCreditCard />, path: "/dashboard/wallet" },
     { label: "Purchase History", icon: <FiShoppingBag />, path: "/dashboard/purchase-history" },
     { label: "Feedback", icon: <FiMessageCircle />, path: "/dashboard/feedback" },
     { label: "Referral", icon: <FiUsers />, path: "/dashboard/referral" },
-    { label: "FAQs", icon: <FiHelpCircle />, path: "/dashboard/faqs" },
-    {
-      label: "Refund Policy",
-      icon: <FiRefreshCw />,
-      path: "/dashboard/refund",
-    },
   ];
 
   const handleNavClick = (path: string) => {
@@ -48,7 +41,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900">
+    <div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900 overflow-hidden">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -70,7 +63,7 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
         }
       `}
       >
-        <div className="p-8 h-full flex flex-col">
+        <div className="p-8 h-full flex flex-col overflow-hidden">
           {/* Logo/Brand */}
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-2">
@@ -91,8 +84,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
-            {navItems.map((item, index) => (
+          <nav className="flex flex-col gap-2 flex-1 overflow-hidden">
+            {navItems.map((item) => (
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.path)}
@@ -154,8 +147,8 @@ const SidebarLayout = ({ children }: SidebarLayoutProps) => {
       )}
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        <div className="lg:hidden h-20"></div>{" "}
+      <main className="flex-1 overflow-hidden">
+        <div className="lg:hidden h-20"></div>
         {/* Spacer for mobile menu button */}
         {children}
       </main>

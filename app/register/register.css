@@ -1,4 +1,4 @@
-/* Enhanced Black & Red Themed Registration Form */
+
 
 * {
   margin: 0;
@@ -109,38 +109,18 @@ body::after {
   50% { background-position: 100% 50%; }
 }
 
-.register-container h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 30px 30px 0;
-  color: #ffffff;
-  font-size: 28px;
-  font-weight: 700;
-  text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-  animation: titleGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes titleGlow {
-  from { 
-    text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-    transform: scale(1);
-  }
-  to { 
-    text-shadow: 0 0 35px rgba(255, 0, 0, 0.9), 0 0 50px rgba(255, 0, 0, 0.4);
-    transform: scale(1.02);
-  }
-}
-
-.register-form {
+/* Form Wrapper */
+.space-y-2 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 0 30px 30px;
+  padding: 30px;
   position: relative;
 }
 
-.register-form input,
-.register-form select {
+/* Input and Select Base Styles */
+input,
+select {
   padding: 16px 20px;
   font-size: 16px;
   background: rgba(25, 25, 25, 0.7);
@@ -151,16 +131,44 @@ body::after {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
-.register-form input::placeholder {
+input::placeholder {
   color: rgba(255, 255, 255, 0.6);
   transition: color 0.3s ease;
 }
 
+/* Select Dropdown Styling */
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: 
+    linear-gradient(45deg, transparent 50%, rgba(255, 0, 0, 0.8) 50%),
+    linear-gradient(135deg, rgba(255, 0, 0, 0.8) 50%, transparent 50%);
+  background-position: 
+    right 15px top 50%, 
+    right 10px top 50%;
+  background-size: 
+    5px 5px, 
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+select option {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+}
+
+select option:hover {
+  background: rgba(255, 0, 0, 0.2);
+}
+
 /* Enhanced Focus Effects */
-.register-form input:focus,
-.register-form select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #ff0000;
   background: rgba(35, 35, 35, 0.9);
@@ -173,8 +181,8 @@ body::after {
 }
 
 /* Hover Glow Effect */
-.register-form input:hover,
-.register-form select:hover {
+input:hover,
+select:hover {
   border-color: rgba(255, 0, 0, 0.5);
   box-shadow: 
     0 0 15px rgba(255, 0, 0, 0.2),
@@ -182,45 +190,7 @@ body::after {
   transform: translateY(-1px);
 }
 
-.gender-group {
-  display: flex;
-  gap: 20px;
-  padding: 16px 20px;
-  background: rgba(25, 25, 25, 0.7);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 0, 0, 0.3);
-  border-radius: 12px;
-  color: #ffffff;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-.gender-group:hover {
-  border-color: rgba(255, 0, 0, 0.5);
-  box-shadow: 
-    0 0 15px rgba(255, 0, 0, 0.2),
-    inset 0 2px 4px rgba(0, 0, 0, 0.3);
-  transform: translateY(-1px);
-}
-
-.gender-group input[type="radio"] {
-  width: auto;
-  margin-right: 8px;
-  accent-color: #ff0000;
-  transform: scale(1.2);
-}
-
-.gender-group label {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.gender-group label:hover {
-  color: #ff6666;
-  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-}
-
+/* Button Base Styles */
 button {
   padding: 16px;
   background: linear-gradient(135deg, #ff0000 0%, #8b0000 50%, #ff0000 100%);
@@ -236,6 +206,47 @@ button {
   overflow: hidden;
   box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
+}
+
+/* Button Disabled State */
+button:disabled {
+  background: linear-gradient(135deg, #333333 0%, #1a1a1a 50%, #333333 100%);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transform: none;
+  opacity: 0.6;
+}
+
+button:disabled:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-position: 0% 0%;
+}
+
+/* OTP Button Specific Styling */
+button[type="button"] {
+  background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #1a1a1a 100%);
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+button[type="button"]:hover:not(:disabled) {
+  background-position: 100% 0%;
+  border-color: #ff0000;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 0, 0, 0.3);
+}
+
+/* Submit Button (Register) Styling */
+button[type="submit"] {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Button Shine Effect */
@@ -250,7 +261,7 @@ button::before {
   transition: left 0.6s ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background-position: 100% 0%;
   transform: translateY(-3px) scale(1.02);
   box-shadow: 
@@ -259,38 +270,49 @@ button:hover {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
-button:hover::before {
+button:hover:not(:disabled)::before {
   left: 100%;
 }
 
-button:active {
+button:active:not(:disabled) {
   transform: translateY(-1px) scale(1.01);
   transition: transform 0.1s ease;
 }
 
-.google-btn {
-  background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #1a1a1a 100%);
-  background-size: 200% 200%;
-  border: 2px solid rgba(255, 0, 0, 0.3);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+/* Loading State Animation */
+button:disabled.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: buttonSpinner 1s linear infinite;
 }
 
-.google-btn:hover {
-  background-position: 100% 0%;
-  border-color: #ff0000;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.6),
-    0 0 20px rgba(255, 0, 0, 0.3);
+@keyframes buttonSpinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* Error Message Styling */
+p[style*="color: red"],
 .error {
-  color: #ff6666;
+  color: #ff6666 !important;
   font-size: 14px;
   text-align: center;
-  margin-top: -8px;
+  margin-top: 10px;
   text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
   animation: errorPulse 1.5s ease-in-out infinite alternate;
-  padding: 0 30px;
+  padding: 12px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
 }
 
 @keyframes errorPulse {
@@ -300,9 +322,95 @@ button:active {
   }
   to { 
     opacity: 1; 
-    transform: scale(1.05);
+    transform: scale(1.02);
     text-shadow: 0 0 20px rgba(255, 0, 0, 1);
   }
+}
+
+/* Success Message Styling */
+p[style*="color: green"],
+.success {
+  color: #66ff66 !important;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+  animation: successPulse 1.5s ease-in-out infinite alternate;
+  padding: 12px;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes successPulse {
+  from { 
+    opacity: 0.7; 
+    transform: scale(1);
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1.02);
+    text-shadow: 0 0 20px rgba(0, 255, 0, 1);
+  }
+}
+
+/* OTP Section Styling */
+.otp-section {
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(0, 50, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: otpSectionSlide 0.5s ease-out;
+}
+
+@keyframes otpSectionSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 200px;
+  }
+}
+
+/* Login Link Styling */
+p[style*="marginTop"] {
+  margin-top: 20px !important;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+}
+
+a[href="/login"] {
+  color: #ff6666 !important;
+  text-decoration: underline !important;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+a[href="/login"]:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+  text-decoration: none !important;
+}
+
+/* Form Validation Visual Feedback */
+input:invalid {
+  border-color: rgba(255, 100, 100, 0.5);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+input:valid {
+  border-color: rgba(100, 255, 100, 0.3);
+}
+
+select:valid {
+  border-color: rgba(100, 255, 100, 0.3);
 }
 
 /* Responsive Design */
@@ -312,18 +420,18 @@ button:active {
     max-width: none;
   }
   
-  .register-form {
-    padding: 0 20px 20px;
+  .space-y-2 {
+    padding: 20px;
   }
   
-  .register-container h2 {
-    padding: 20px 20px 0;
-    font-size: 24px;
+  button {
+    font-size: 14px;
+    padding: 14px;
   }
   
-  .gender-group {
-    flex-direction: column;
-    gap: 12px;
+  input, select {
+    padding: 14px 16px;
+    font-size: 14px;
   }
 }
 
@@ -357,4 +465,24 @@ button:active {
     transform: translateY(-10px);
     opacity: 0.6;
   }
+}
+
+/* ============================= */
+/* Custom Phone Input Styling    */
+/* ============================= */
+
+.phone-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.phone-input-container select {
+  width: 80px; /* dropdown stays small */
+  flex-shrink: 0;
+}
+
+.phone-input-container input[type="tel"] {
+  flex: 1; /* phone number input expands wide */
 }

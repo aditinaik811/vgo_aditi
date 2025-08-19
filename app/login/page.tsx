@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/SupabaseClient';
+import './login.css';
+import PhoneInput from "../../components/PhoneInput"; 
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,34 +12,40 @@ export default function LoginPage() {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSendOtp = async () => {
-  setError('');
+    setError('');
+    setLoading(true);
 
-  // Check if phone number exists in profiles
-  const { data: existingProfile, error: profileError } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('phone', phone)
-    .single();
+    // Check if phone number exists in profiles
+    const { data: existingProfile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('phone', phone)
+      .single();
 
-  if (profileError || !existingProfile) {
-    setError('Phone number not registered. Please register first.');
-    return;
-  }
+    if (profileError || !existingProfile) {
+      setError('Phone number not registered. Please register first.');
+      setLoading(false);
+      return;
+    }
 
-  // If profile exists, send OTP
-  const { error } = await supabase.auth.signInWithOtp({ phone });
+    // If profile exists, send OTP
+    const { error } = await supabase.auth.signInWithOtp({ phone });
 
-  if (error) {
-    setError(error.message);
-  } else {
-    setOtpSent(true);
-    alert('OTP sent to your phone number.');
-  }
-};
+    if (error) {
+      setError(error.message);
+    } else {
+      setOtpSent(true);
+    }
+    setLoading(false);
+  };
+
   const handleVerifyOtp = async () => {
     setError('');
+    setLoading(true);
+    
     const { error } = await supabase.auth.verifyOtp({
       phone,
       token: otp,
@@ -49,9 +57,11 @@ export default function LoginPage() {
     } else {
       router.push('/dashboard');
     }
+    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
+    setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -62,50 +72,72 @@ export default function LoginPage() {
     if (error) {
       setError('Google sign-in failed.');
     }
+    setLoading(false);
   };
 
   return (
-    <div className="space-y-4 max-w-sm mx-auto mt-10">
-      <h2 className="text-xl font-bold">Login</h2>
+    <div className="login-container">
+      <h2>Login</h2>
+      
+      <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+        {/* ✅ PhoneInput (dropdown smaller, input wider) */}
+        <PhoneInput
+          value={phone}
+          onChange={setPhone}
+          disabled={loading}
+        />
 
-      <input
-        type="tel"
-        placeholder="Phone Number"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="w-full p-2 border rounded"
-        required
-      />
-
-      {!otpSent ? (
-        <button onClick={handleSendOtp} className="w-full bg-blue-500 text-white p-2 rounded">
-          Send OTP
-        </button>
-      ) : (
-        <>
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <button onClick={handleVerifyOtp} className="w-full bg-green-500 text-white p-2 rounded">
-            Verify OTP
+        {!otpSent ? (
+          <button 
+            type="button"
+            onClick={handleSendOtp} 
+            disabled={loading || !phone}
+            className={loading ? 'loading' : ''}
+          >
+            {loading ? 'Sending...' : 'Send OTP'}
           </button>
-        </>
-      )}
+        ) : (
+          <div className="otp-section">
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+              disabled={loading}
+            />
+            <button 
+              type="submit"
+              onClick={handleVerifyOtp} 
+              disabled={loading || !otp}
+              className={loading ? 'loading' : ''}
+            >
+              {loading ? 'Verifying...' : 'Verify & Login'}
+            </button>
+          </div>
+        )}
 
-      <button onClick={handleGoogleLogin} className="w-full bg-red-500 text-white p-2 rounded">
-        Sign in with Google
-      </button>
+        <button 
+          type="button"
+          onClick={handleGoogleLogin} 
+          disabled={loading}
+          className="google-btn"
+        >
+          {loading ? 'Signing in...' : 'Sign in with Google'}
+        </button>
 
-      {error && <p className="text-red-600">{error}</p>}
+        {error && <div className="login-error">{error}</div>}
+        {otpSent && !error && <div className="success">OTP sent to your phone number!</div>}
+      </form>
 
-      <p className="text-center">
+      <p style={{ marginTop: '20px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
         New user?{' '}
-        <a href="/register" className="text-blue-600 underline">
+        <a href="/register" style={{ 
+          color: '#ff6666', 
+          textDecoration: 'underline',
+          textShadow: '0 0 10px rgba(255, 0, 0, 0.5)',
+          transition: 'all 0.3s ease'
+        }}>
           Register
         </a>
       </p>

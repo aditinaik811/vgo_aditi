@@ -1,15 +1,12 @@
 "use client";
 
 import SidebarLayout from "@/components/SidebarLayout";
+import AccountDetailsPage from "./account/page";
 
-const DashboardPage = () => {
+export default function DashboardPage() {
   return (
     <SidebarLayout>
-      <h1 className="text-3xl font-semibold mb-4">
-        Welcome to your VGo profile
-      </h1>
+      <AccountDetailsPage />
     </SidebarLayout>
   );
-};
-
-export default DashboardPage;
+}
