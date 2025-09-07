@@ -20,19 +20,22 @@ export default function RefundPolicyPage() {
     },
     {
       title: "Eligible Items",
-      description: "Physical products, unused digital credits, and premium subscriptions.",
+      description:
+        "Physical products, unused digital credits, and premium subscriptions.",
       icon: <FiCheckCircle />,
       color: "blue",
     },
     {
       title: "Non-Refundable Items",
-      description: "Downloaded digital content, used game codes, and gift cards.",
+      description:
+        "Downloaded digital content, used game codes, and gift cards.",
       icon: <FiXCircle />,
       color: "red",
     },
     {
       title: "Processing Time",
-      description: "Refunds processed within 3-5 business days to original payment method.",
+      description:
+        "Refunds processed within 3-5 business days to original payment method.",
       icon: <FiRefreshCw />,
       color: "purple",
     },
@@ -42,12 +45,14 @@ export default function RefundPolicyPage() {
     {
       step: 1,
       title: "Request Refund",
-      description: "Go to Purchase History and click 'Request Refund' on eligible orders.",
+      description:
+        "Go to Purchase History and click 'Request Refund' on eligible orders.",
     },
     {
       step: 2,
       title: "Provide Reason",
-      description: "Select refund reason and provide additional details if required.",
+      description:
+        "Select refund reason and provide additional details if required.",
     },
     {
       step: 3,
@@ -57,7 +62,8 @@ export default function RefundPolicyPage() {
     {
       step: 4,
       title: "Refund Issued",
-      description: "Approved refunds are processed to your original payment method.",
+      description:
+        "Approved refunds are processed to your original payment method.",
     },
   ];
 
@@ -74,7 +80,9 @@ export default function RefundPolicyPage() {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-white bg-clip-text text-transparent">
                 Refund Policy
               </h1>
-              <p className="text-gray-400 mt-1">Learn about our refund terms and process</p>
+              <p className="text-gray-400 mt-1">
+                Learn about our refund terms and process
+              </p>
             </div>
           </div>
         </div>
@@ -89,7 +97,9 @@ export default function RefundPolicyPage() {
               <div className="flex items-start gap-4">
                 <div className="text-2xl text-red-400">{item.icon}</div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {item.title}
+                  </h3>
                   <p className="text-gray-300">{item.description}</p>
                 </div>
               </div>
@@ -99,7 +109,9 @@ export default function RefundPolicyPage() {
 
         {/* Refund Process */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">How to Request a Refund</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">
+            How to Request a Refund
+          </h2>
           <div className="space-y-4">
             {refundSteps.map((step, index) => (
               <div
@@ -110,7 +122,9 @@ export default function RefundPolicyPage() {
                   {step.step}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-1">{step.title}</h3>
+                  <h3 className="text-lg font-semibold text-white mb-1">
+                    {step.title}
+                  </h3>
                   <p className="text-gray-300">{step.description}</p>
                 </div>
               </div>
@@ -123,12 +137,23 @@ export default function RefundPolicyPage() {
           <div className="flex items-start gap-3">
             <FiAlertCircle className="text-yellow-400 text-xl flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Important Notes</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Important Notes
+              </h3>
               <ul className="text-gray-300 space-y-2">
-                <li>• Refunds are processed to the original payment method only</li>
-                <li>• Digital items must be unused and not downloaded to be eligible</li>
-                <li>• Partial refunds may apply for used subscription periods</li>
-                <li>• All refund requests are subject to review and approval</li>
+                <li>
+                  • Refunds are processed to the original payment method only
+                </li>
+                <li>
+                  • Digital items must be unused and not downloaded to be
+                  eligible
+                </li>
+                <li>
+                  • Partial refunds may apply for used subscription periods
+                </li>
+                <li>
+                  • All refund requests are subject to review and approval
+                </li>
               </ul>
             </div>
           </div>

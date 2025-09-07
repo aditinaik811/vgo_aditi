@@ -271,7 +271,13 @@ export default function WalletPage() {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-red-400 to-white bg-clip-text text-transparent">
                 My Wallet
               </h1>
+
               <p className="text-gray-400 mt-1">Manage your earnings and track your progress</p>
+
+              <p className="text-gray-400 mt-1">
+                Manage your earnings and track your progress
+              </p>
+
             </div>
           </div>
         </div>
