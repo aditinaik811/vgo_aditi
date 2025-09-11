@@ -1,32 +1,32 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/SupabaseClient';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/SupabaseClient";
+import Link from "next/link";
 import PhoneInput from "../../components/PhoneInput";
 
-import './register.css'; // Assuming you have a CSS file for styles
+import "./register.css"; // Assuming you have a CSS file for styles
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    full_name: '',
-    phone: '',
-    age: '',
-    gender: '',
-    category: '',
-    city: '',
+    full_name: "",
+    phone: "",
+    age: "",
+    gender: "",
+    category: "",
+    city: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
-  const [otpSuccess, setOtpSuccess] = useState('');
+  const [otpSuccess, setOtpSuccess] = useState("");
 
   const isFormComplete =
     formData.full_name &&
@@ -38,13 +38,13 @@ export default function RegisterPage() {
     otpVerified;
 
   const handleSendOTP = async () => {
-    setError('');
-    setOtpSuccess('');
+    setError("");
+    setOtpSuccess("");
     setOtpVerified(false);
     setOtpLoading(true);
 
     if (!formData.phone) {
-      setError('Please enter your phone number first.');
+      setError("Please enter your phone number first.");
       setOtpLoading(false);
       return;
     }
@@ -52,20 +52,20 @@ export default function RegisterPage() {
     // Phone number validation
     const phoneRegex = /^\+91[6-9]\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
-      setError('Please enter a valid Indian phone number (+91XXXXXXXXXX).');
+      setError("Please enter a valid Indian phone number (+91XXXXXXXXXX).");
       setOtpLoading(false);
       return;
     }
 
     try {
       const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('phone', formData.phone)
+        .from("profiles")
+        .select("id")
+        .eq("phone", formData.phone)
         .single();
 
       if (existingProfile) {
-        setError('Phone number already registered. Please log in.');
+        setError("Phone number already registered. Please log in.");
         setOtpLoading(false);
         return;
       }
@@ -78,22 +78,22 @@ export default function RegisterPage() {
         setError(otpError.message);
       } else {
         setOtpSent(true);
-        setOtpSuccess('OTP sent successfully to your phone.');
+        setOtpSuccess("OTP sent successfully to your phone.");
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setOtpLoading(false);
     }
   };
 
   const handleVerifyOTP = async () => {
-    setError('');
-    setOtpSuccess('');
+    setError("");
+    setOtpSuccess("");
     setVerifyLoading(true);
 
     if (!otp || otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP.');
+      setError("Please enter a valid 6-digit OTP.");
       setVerifyLoading(false);
       return;
     }
@@ -102,18 +102,18 @@ export default function RegisterPage() {
       const { data, error: verifyError } = await supabase.auth.verifyOtp({
         phone: formData.phone,
         token: otp,
-        type: 'sms',
+        type: "sms",
       });
 
       if (verifyError) {
-        setError('Invalid OTP. Please try again.');
+        setError("Invalid OTP. Please try again.");
         setOtpVerified(false);
       } else {
         setOtpVerified(true);
-        setOtpSuccess('OTP verified successfully!');
+        setOtpSuccess("OTP verified successfully!");
       }
     } catch (err) {
-      setError('An unexpected error occurred during verification.');
+      setError("An unexpected error occurred during verification.");
       setOtpVerified(false);
     } finally {
       setVerifyLoading(false);
@@ -122,7 +122,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -132,12 +132,12 @@ export default function RegisterPage() {
       } = await supabase.auth.getUser();
 
       if (!user || sessionError) {
-        setError('User session invalid. Please verify OTP again.');
+        setError("User session invalid. Please verify OTP again.");
         setLoading(false);
         return;
       }
 
-      const { error: insertError } = await supabase.from('profiles').insert([
+      const { error: insertError } = await supabase.from("profiles").insert([
         {
           id: user.id,
           full_name: formData.full_name,
@@ -150,12 +150,12 @@ export default function RegisterPage() {
       ]);
 
       if (insertError) {
-        setError('Error saving profile info. Please try again.');
+        setError("Error saving profile info. Please try again.");
       } else {
-        router.push('/dashboard');
+        router.push("/dashboard");
       }
     } catch (err) {
-      setError('An unexpected error occurred during registration.');
+      setError("An unexpected error occurred during registration.");
     } finally {
       setLoading(false);
     }
@@ -164,33 +164,52 @@ export default function RegisterPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
     // Clear errors when user starts typing
-    if (error) setError('');
+    if (error) setError("");
   };
 
   return (
-    <div className="register-container" style={{ maxWidth: '480px', margin: '50px auto', padding: '30px', background: 'rgba(15, 15, 15, 0.4)', borderRadius: '20px', border: '2px solid rgba(255, 0, 0, 0.2)' }}>
-      <h2 style={{ 
-        color: '#ffffff', 
-        textAlign: 'center', 
-        marginBottom: '30px', 
-        fontSize: '32px',
-        fontWeight: '800',
-        textTransform: 'uppercase',
-        letterSpacing: '3px',
-        textShadow: '0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4)',
-        background: 'linear-gradient(135deg, #ffffff 0%, #ff6666 50%, #ffffff 100%)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        position: 'relative'
-      }}>Register</h2>
-      
-      <form onSubmit={handleRegister} className="space-y-2" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div
+      className="register-container"
+      style={{
+        maxWidth: "480px",
+        margin: "50px auto",
+        padding: "30px",
+        background: "rgba(15, 15, 15, 0.4)",
+        borderRadius: "20px",
+        border: "2px solid rgba(255, 0, 0, 0.2)",
+      }}
+    >
+      <h2
+        style={{
+          color: "#ffffff",
+          textAlign: "center",
+          marginBottom: "30px",
+          fontSize: "32px",
+          fontWeight: "800",
+          textTransform: "uppercase",
+          letterSpacing: "3px",
+          textShadow:
+            "0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4)",
+          background:
+            "linear-gradient(135deg, #ffffff 0%, #ff6666 50%, #ffffff 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          position: "relative",
+        }}
+      >
+        Register
+      </h2>
+      <form
+        onSubmit={handleRegister}
+        className="space-y-2"
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+      >
         <input
           type="text"
           placeholder="Full Name"
           value={formData.full_name}
-          onChange={(e) => handleInputChange('full_name', e.target.value)}
+          onChange={(e) => handleInputChange("full_name", e.target.value)}
           required
           minLength={2}
           maxLength={50}
@@ -198,7 +217,7 @@ export default function RegisterPage() {
 
         <PhoneInput
           value={formData.phone}
-          onChange={(val) => handleInputChange('phone', val)}
+          onChange={(val) => handleInputChange("phone", val)}
           disabled={otpLoading || loading}
         />
 
@@ -206,9 +225,9 @@ export default function RegisterPage() {
           type="button"
           onClick={handleSendOTP}
           disabled={!formData.phone || otpLoading}
-          className={otpLoading ? 'loading' : ''}
+          className={otpLoading ? "loading" : ""}
         >
-          {otpLoading ? 'Sending OTP...' : 'Send OTP to Phone'}
+          {otpLoading ? "Sending OTP..." : "Send OTP to Phone"}
         </button>
 
         {otpSent && (
@@ -218,9 +237,9 @@ export default function RegisterPage() {
               placeholder="Enter 6-digit OTP"
               value={otp}
               onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                const value = e.target.value.replace(/\D/g, "").slice(0, 6);
                 setOtp(value);
-                if (error) setError('');
+                if (error) setError("");
               }}
               required
               maxLength={6}
@@ -230,16 +249,16 @@ export default function RegisterPage() {
               type="button"
               onClick={handleVerifyOTP}
               disabled={!otp || otp.length !== 6 || verifyLoading}
-              className={verifyLoading ? 'loading' : ''}
+              className={verifyLoading ? "loading" : ""}
             >
-              {verifyLoading ? 'Verifying...' : 'Verify OTP'}
+              {verifyLoading ? "Verifying..." : "Verify OTP"}
             </button>
           </div>
         )}
 
         <select
           value={formData.age}
-          onChange={(e) => handleInputChange('age', e.target.value)}
+          onChange={(e) => handleInputChange("age", e.target.value)}
           required
         >
           <option value="">Select Age</option>
@@ -252,7 +271,7 @@ export default function RegisterPage() {
 
         <select
           value={formData.gender}
-          onChange={(e) => handleInputChange('gender', e.target.value)}
+          onChange={(e) => handleInputChange("gender", e.target.value)}
           required
         >
           <option value="">Select Gender</option>
@@ -263,7 +282,7 @@ export default function RegisterPage() {
 
         <select
           value={formData.category}
-          onChange={(e) => handleInputChange('category', e.target.value)}
+          onChange={(e) => handleInputChange("category", e.target.value)}
           required
         >
           <option value="">Select Category</option>
@@ -277,38 +296,40 @@ export default function RegisterPage() {
           type="text"
           placeholder="City"
           value={formData.city}
-          onChange={(e) => handleInputChange('city', e.target.value)}
+          onChange={(e) => handleInputChange("city", e.target.value)}
           required
           minLength={2}
           maxLength={50}
         />
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={!isFormComplete || loading}
-          className={loading ? 'loading' : ''}
+          className={loading ? "loading" : ""}
         >
-          {loading ? 'Creating Account...' : 'Create Account'}
+          {loading ? "Creating Account..." : "Create Account"}
         </button>
 
-        {error && (
-          <p className="error">{error}</p>
-        )}
-        
-        {otpSuccess && (
-          <p className="success">{otpSuccess}</p>
-        )}
-      </form>
+        {error && <p className="error">{error}</p>}
 
-      <p style={{ marginTop: '20px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.8)' }}>
-        Already have an account?{' '}
+        {otpSuccess && <p className="success">{otpSuccess}</p>}
+      </form>
+      <p
+        style={{
+          marginTop: "20px",
+          textAlign: "center",
+          color: "rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        Already have an account?{" "}
         <Link
           href="/login"
-          style={{ color: '#ff6666', textDecoration: 'underline' }}
+          style={{ color: "#ff6666", textDecoration: "underline" }}
         >
           Sign In
         </Link>
       </p>
+         
     </div>
   );
 }
